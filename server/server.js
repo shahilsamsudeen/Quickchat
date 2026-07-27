@@ -14,7 +14,7 @@ const httpServer = http.createServer(app) // Express passe dans le serveur http
 // Création serveur Socket.io
 const io = new Server(httpServer, {     // utilise le serveur HTTP
     cors: {     // j'autorise uniquement mon application React
-        origin: 'http://localhost:5173',     // L'URL de vite
+        origin: '*',     // L'URL de vite
         methods: ['GET', 'POST'],   
     },
 });
