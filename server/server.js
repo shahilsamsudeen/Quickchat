@@ -28,17 +28,9 @@ const io = new Server(httpServer, {
 
 app.use(cors({
   origin: "https://quickchat-mauve.vercel.app",
+  methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"],
   credentials: true
 }));
-const pubClient = new Redis(process.env.REDIS_URL);
-const subClient = pubClient.duplicate();
-
-pubClient.on('connect', () => console.log('Redis connecté'));
-pubClient.on('error', (err) => console.error('Erreur Redis :', err.message));
-
-io.adapter(createAdapter(pubClient, subClient));
-
-app.use(cors());
 app.use(express.json());
 
 connectDB();
