@@ -23,8 +23,7 @@ const io = new Server(httpServer, {
     origin: "https://quickchat-mauve.vercel.app",
     methods: ["GET", "POST"],
     credentials: true
-  },
-  transports: ['websocket', 'polling']
+  }
 });
 
 app.use(cors({
