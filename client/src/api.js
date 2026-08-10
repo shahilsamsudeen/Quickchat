@@ -1,4 +1,4 @@
-const BASE_URL = 'http://localhost:5001/api';
+const BASE_URL = `${import.meta.env.VITE_API_URL}/api`;
 
 export const register = async (username, password) => {
     const res = await fetch(`${BASE_URL}/auth/register`, {
@@ -20,14 +20,14 @@ export const login = async (username, password) => {
 
 // On récupère l'historique des messages privés avec un utilisateur.
 export const getDMHistory = async (userId) => {
-    const res = await fetch(`http://localhost:5001/api/dm/${userId}`, {
+    const res = await fetch(`${BASE_URL}/dm/${userId}`, {
         headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
     });
     return res.json();
 }
 // On envoie un contact
 export const addContact = async (username) => {
-    const res = await fetch('http://localhost:5001/api/contacts/add', {
+    const res = await fetch(`${BASE_URL}/contacts/add`, {
         method: 'POST',
         headers: {
             'Content-Type': 'application/json', Authorization: `Bearer ${localStorage.getItem('token')}`,
@@ -40,7 +40,7 @@ export const addContact = async (username) => {
 
 // 
 export const getContacts = async () => {
-    const res = await fetch('http://localhost:5001/api/contacts', {
+    const res = await fetch(`${BASE_URL}/api/contacts`, {
         headers: {
             Authorization: `Bearer ${localStorage.getItem('token')}`,
         },
@@ -51,7 +51,7 @@ export const getContacts = async () => {
 
 // Bouton accepter
 export const acceptContact = async (requesterId) => {
-    const res = await fetch ('http://localhost:5001/api/contacts/accept', {
+    const res = await fetch (`${BASE_URL}/api/contacts/accept`, {
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json',
@@ -63,7 +63,7 @@ export const acceptContact = async (requesterId) => {
 };
 
 export const rejectContact = async (contactId) => {
-    const res = await fetch(`http://localhost:5001/api/contacts/${contactId}`, {
+    const res = await fetch(`${BASE_URL}/api/contacts/${contactId}`, {
     method: 'DELETE',
     headers: {
       Authorization: `Bearer ${localStorage.getItem('token')}`,
