@@ -63,7 +63,7 @@ export const acceptContact = async (requesterId) => {
 };
 
 export const rejectContact = async (contactId) => {
-    const res = await fetch(`${BASE_URL}/api/contacts/${contactId}`, {
+    const res = await fetch(`${BASE_URL}/contacts/${contactId}`, {
     method: 'DELETE',
     headers: {
       Authorization: `Bearer ${localStorage.getItem('token')}`,
