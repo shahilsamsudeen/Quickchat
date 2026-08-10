@@ -1,40 +1,30 @@
 import { useState } from 'react';
 import Chat from './composants/Chat';
-import './App.css';
+import Auth from './composants/Auth';
+import socket from './socket';
 
 function App() {
-  const [username, setUsername] = useState('');
-  const [joined, setJoined] = useState(false);
-  const [input, setInput] = useState('');
+  const [user, setUser] = useState(null);
 
-  const handleJoin = () => {
-    if (!input.trim()) return;
-    setUsername(input.trim());
-    setJoined(true);
+  const handleAuth = (token, username, userId) => {
+    localStorage.setItem('token', token);
+    setUser ({
+      _id: userId,
+      username: username,
+    });
+    socket.connect();   // Connexion socket.io après avoir le token
+
+    socket.on('connect', () => {
+        console.log('🟢 SOCKET CONNECTÉ', socket.id);
+    });
+
+    socket.on('connect_error', (err) => {
+        console.log('🔴 SOCKET ERREUR', err.message);
+    });
   };
 
-  if (!joined) {
-    return (
-      <div className="join-container">
-        <div className="join-card">
-          <h2 className="join-title">Choisis un pseudo</h2>
-          <input
-            type="text"
-            className="join-input"
-            value={input}
-            onChange={(e) => setInput(e.target.value)}
-            onKeyDown={(e) => e.key === 'Enter' && handleJoin()}
-            placeholder="Ton pseudo..."
-          />
-          <button className="join-button" onClick={handleJoin}>
-            Entrer dans le chat
-          </button>
-        </div>
-      </div>
-    );
-  }
-
-  return <Chat username={username} />;
-}
+  if (!user) return <Auth onAuth={handleAuth} />;
+  return <Chat username = {user.username} userId = {user._id} />;
+};
 
 export default App;
