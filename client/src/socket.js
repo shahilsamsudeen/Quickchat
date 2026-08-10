@@ -1,7 +1,9 @@
 import { io } from 'socket.io-client';
 
-const socket = io(import.meta.env.VITE_API_URL, {
-  autoConnect: false,   // On connecte manuellement après login
+const socket = io('https://quickchat-server-1sgt.onrender.com', {
+  autoConnect: false,
+  withCredentials: true,
+  transports: ['websocket', 'polling'],
   auth: (cb) => {
     cb ({token: localStorage.getItem('token')});
   },

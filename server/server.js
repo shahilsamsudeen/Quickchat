@@ -20,12 +20,17 @@ const httpServer = http.createServer(app);
 
 const io = new Server(httpServer, {
   cors: {
-    origin: ['https://quickchat-mauve.vercel.app'],
-    methods: ['GET', 'POST'],
+    origin: "https://quickchat-mauve.vercel.app",
+    methods: ["GET", "POST"],
+    credentials: true
   },
+  transports: ['websocket', 'polling']
 });
 
-// --- Redis ---
+app.use(cors({
+  origin: "https://quickchat-mauve.vercel.app",
+  credentials: true
+}));
 const pubClient = new Redis(process.env.REDIS_URL);
 const subClient = pubClient.duplicate();
 
