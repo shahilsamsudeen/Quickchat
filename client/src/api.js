@@ -40,7 +40,7 @@ export const addContact = async (username) => {
 
 // 
 export const getContacts = async () => {
-    const res = await fetch(`${BASE_URL}/api/contacts`, {
+    const res = await fetch(`${BASE_URL}/contacts`, {
         headers: {
             Authorization: `Bearer ${localStorage.getItem('token')}`,
         },
@@ -51,7 +51,7 @@ export const getContacts = async () => {
 
 // Bouton accepter
 export const acceptContact = async (requesterId) => {
-    const res = await fetch (`${BASE_URL}/api/contacts/accept`, {
+    const res = await fetch (`${BASE_URL}/contacts/accept`, {
         method: 'PUT',
         headers: {
             'Content-Type': 'application/json',
