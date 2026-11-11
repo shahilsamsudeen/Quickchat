@@ -67,7 +67,7 @@ npm run dev
 
 Vite affiche l’adresse locale du client, généralement `http://localhost:5173`.
 
-Le client est actuellement configuré pour utiliser l’API et Socket.IO déployés sur Render. Pour utiliser le serveur local, remplacer l’URL de l’API dans `client/src/api.js` par `http://localhost:5001/api`, et l’URL Socket.IO dans `client/src/socket.js` par `http://localhost:5001`.
+Pour lancer l’ensemble en local, configure l’URL de l’API dans `client/src/api.js` sur `http://localhost:5001/api` et l’URL Socket.IO dans `client/src/socket.js` sur `http://localhost:5001`. Ces deux fichiers contiennent actuellement une URL d’hébergement préconfigurée ; elle n’est pas nécessaire au lancement local.
 
 ## Structure du projet
 
@@ -83,10 +83,5 @@ quickchat/
     ├── socket/              # Événements de messagerie en temps réel
     └── uploads/             # Pièces jointes locales (ignorées par Git)
 ```
-
-## Déploiement actuel
-
-- **Client :** [quickchat-mauve.vercel.app](https://quickchat-mauve.vercel.app)
-- **API :** [quickchat-server-1sgt.onrender.com](https://quickchat-server-1sgt.onrender.com)
 
 Les secrets et adresses de bases de données doivent rester dans les variables d’environnement. Ne publie jamais le fichier `.env` ni les pièces jointes de `server/uploads/`.
