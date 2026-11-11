@@ -409,3 +409,155 @@
 .dm-input-area button:active {
   transform: translateY(0);
 }
+
+/* Indicateur de saisie */
+.typing-indicator {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding: 8px;
+  background-color: var(--bg);
+  border-top: 1px solid var(--border);
+  color: var(--text);
+  font-size: 0.8rem;
+  font-style: italic;
+}
+
+.typing-indicator span {
+  width: 6px;
+  height: 6px;
+  background-color: var(--text);
+  border-radius: 50%;
+  display: inline-block;
+  animation: wave 1.4s infinite ease-in-out both;
+}
+
+.typing-indicator span:nth-child(1) { animation-delay: -0.32s; }
+.typing-indicator span:nth-child(2) { animation-delay: -0.16s; }
+
+@keyframes wave {
+  0%, 80%, 100% { transform: scale(0); opacity: 0.5; }
+  40% { transform: scale(1); opacity: 1; }
+}
+
+/* Boutons d'action sur les messages */
+.message-action {
+  display: flex;
+  gap: 8px;
+  margin-top: 4px;
+}
+
+.message-action button {
+  background: none;
+  border: none;
+  color: var(--text);
+  font-size: 11px;
+  cursor: pointer;
+  padding: 2px 6px;
+  border-radius: 4px;
+  transition: background 0.2s, color 0.2s;
+}
+
+.message-action button:hover {
+  background-color: var(--code-bg);
+  color: var(--text-h);
+}
+
+.edit-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 8px;
+}
+
+.edit-actions button {
+  padding: 6px 12px;
+  border-radius: 6px;
+  border: none;
+  font-size: 12px;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.btn-save {
+  background-color: #22c55e;
+  color: white;
+}
+
+.btn-cancel {
+  background-color: #6b7280;
+  color: white;
+}
+
+/* --- WhatsApp Style Edit Logic --- */
+
+/* Barre d'aperçu de l'édition au-dessus de l'input */
+.edit-preview-bar {
+  background-color: var(--bg-secondary);
+  border-left: 4px solid var(--accent);
+  padding: 8px 16px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  animation: slideUp 0.2s ease-out;
+}
+
+.edit-preview-content small {
+  color: var(--accent);
+  font-weight: 700;
+  font-size: 11px;
+  text-transform: uppercase;
+}
+
+.edit-preview-content p {
+  margin: 2px 0 0 0;
+  color: var(--text);
+  font-size: 13px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 400px;
+}
+
+.edit-preview-bar button {
+  background: none;
+  border: none;
+  color: var(--text);
+  font-size: 16px;
+  cursor: pointer;
+  opacity: 0.6;
+}
+
+.edit-preview-bar button:hover {
+  opacity: 1;
+}
+
+/* Étiquette "Modifié" sur le message */
+.edited-label {
+  font-size: 10px;
+  margin-left: 6px;
+  font-style: italic;
+  opacity: 0.7;
+}
+
+/* Couleur adaptée quand c'est mon message (fond bleu/accent) */
+.message-item.me .edited-label {
+  color: rgba(255, 255, 255, 0.8);
+}
+
+/* Couleur adaptée quand c'est le message des autres (fond clair) */
+.message-item.others .edited-label {
+  color: var(--text);
+}
+
+/* Mise en évidence du message en cours d'édition */
+.message-item.is-editing .message-content {
+  box-shadow: 0 0 0 2px var(--accent);
+  background-color: var(--accent-bg) !important;
+  color: var(--accent) !important;
+}
+
+@keyframes slideUp {
+  from { transform: translateY(10px); opacity: 0; }
+  to { transform: translateY(0); opacity: 1; }
+}

@@ -13,8 +13,17 @@ const directMessageSchema = new mongoose.Schema({
     },
     content: {
         type: String,
-        required: true,
         trim: true,
+    },
+    fileUrl: {
+        type: String,
+    },
+    fileType: {
+        type: String,
+    },
+    edited: {
+        type: Boolean,
+        default: false,
     },
 },
     { timestamps: true }

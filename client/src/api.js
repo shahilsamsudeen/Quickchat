@@ -25,12 +25,14 @@ export const getDMHistory = async (userId) => {
     });
     return res.json();
 }
+
 // On envoie un contact
 export const addContact = async (username) => {
     const res = await fetch(`${BASE_URL}/contacts/add`, {
         method: 'POST',
         headers: {
-            'Content-Type': 'application/json', Authorization: `Bearer ${localStorage.getItem('token')}`,
+            'Content-Type': 'application/json', 
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
         },
         body: JSON.stringify({username}),
     });
@@ -38,7 +40,7 @@ export const addContact = async (username) => {
     return res.json();
 }
 
-// 
+// On récupère la liste des contacts
 export const getContacts = async () => {
     const res = await fetch(`${BASE_URL}/contacts`, {
         headers: {
@@ -62,6 +64,7 @@ export const acceptContact = async (requesterId) => {
         return res.json();
 };
 
+// Bouton rejeter/supprimer
 export const rejectContact = async (contactId) => {
     const res = await fetch(`${BASE_URL}/contacts/${contactId}`, {
     method: 'DELETE',
@@ -72,3 +75,49 @@ export const rejectContact = async (contactId) => {
 
   return res.json();
 };
+
+// Mise à jour d'un message
+export const updateMessage = async (msgId, newContent) => {
+    const token = localStorage.getItem('token')
+
+    const res = await fetch(`${BASE_URL}/dm/${msgId}`, {
+        method: 'PUT',
+        headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${token}`,
+        },
+        body: JSON.stringify({content: newContent}),
+    });
+
+    return res.json();
+}
+
+// Suppression d'un message
+export const deleteMessage = async (msgId) => {
+    const token = localStorage.getItem('token');
+
+    const res = await fetch(`${BASE_URL}/dm/${msgId}`, {
+        method: 'DELETE',
+        headers: {
+            Authorization: `Bearer ${token}`,
+        },
+    });
+    return res.json();
+}
+
+// Upload de fichier
+export const uploadFile = async (file) => {
+    const formData = new FormData();
+
+    formData.append('file', file);
+
+    const res = await fetch(`${BASE_URL}/dm/upload`, {
+        method: "POST",
+        headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+        },
+        body: formData,
+    })
+
+    return res.json();
+}

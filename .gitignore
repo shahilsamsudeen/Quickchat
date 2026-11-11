@@ -4,3 +4,4 @@ node_modules/
 dump.rdb
 dist/
 .vscode/
+server/uploads/

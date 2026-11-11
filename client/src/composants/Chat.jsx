@@ -4,12 +4,17 @@ import DMPanel from './DMPanel';
 import { addContact, getContacts, acceptContact, rejectContact } from '../api';
 import './Chat.css';
 
+/**
+ * Composant principal de la messagerie.
+ * Gère l'état des contacts, les demandes en attente, et la sélection de conversation.
+ */
 function Chat({ username, userId }) {
     const [onlineUsers, setOnlineUsers] = useState([]);
     const [dmTarget, setDmTarget] = useState(null);
     const [friendUsername, setFriendUsername] = useState('');
     const [contacts, setContacts] = useState([]);
 
+    // 1. Initialisation des écouteurs socket (présence en ligne)
     useEffect(() => {
         const handleOnlineUsers = (users) => {
             setOnlineUsers(users);
@@ -22,6 +27,7 @@ function Chat({ username, userId }) {
         };
     }, []);
 
+    // 2. Chargement initial des contacts depuis l'API
     useEffect(() => {
         const loadContacts = async () => {
             const data = await getContacts();
@@ -32,8 +38,9 @@ function Chat({ username, userId }) {
         loadContacts();
     }, []);
 
+    // Filtrage des demandes d'amis et des amis acceptés
     const pendingRequests = contacts.filter(
-        (contact) => contact.status === 'pending'
+        (contact) => contact.status === 'pending' && contact.recipient && contact.recipient._id === userId
     );
 
     const acceptedContacts = contacts.filter(
@@ -41,10 +48,13 @@ function Chat({ username, userId }) {
     );
 
     const friends = acceptedContacts.map((contact) => {
+        if (!contact.requester || !contact.recipient) return null;
         return contact.requester._id.toString() === userId.toString()
             ? contact.recipient
             : contact.requester;
-    });
+    }).filter(f => f !== null);
+
+    // --- Actions (API) ---
 
     const handleAddFriend = async () => {
         if (!friendUsername.trim()) return;
@@ -57,9 +67,9 @@ function Chat({ username, userId }) {
         
         alert("Demande d'ami envoyée !");
         setFriendUsername('');
-        // Recharger les contacts pour voir la demande envoyée (optionnel si on veut l'afficher)
-        const updateContacts = await getContacts();
-        setContacts(updateContacts);
+        // Recharger pour afficher la nouvelle demande
+        const updatedContacts = await getContacts();
+        setContacts(updatedContacts);
     }
 
     const handleAccept = async (requesterId) => {
@@ -68,8 +78,9 @@ function Chat({ username, userId }) {
             alert(data.error);
             return;
         }
-        const updateContacts = await getContacts();
-        setContacts(updateContacts);
+        // Recharger pour mettre à jour la liste des amis
+        const updatedContacts = await getContacts();
+        setContacts(updatedContacts);
     }
 
     const handleReject = async (contactId) => {
@@ -78,36 +89,29 @@ function Chat({ username, userId }) {
             alert(data.error);
             return;
         }
-        const updateContacts = await getContacts();
-        setContacts(updateContacts);
+        const updatedContacts = await getContacts();
+        setContacts(updatedContacts);
     }
-useEffect(() => {
-    // ... (Logique loadContacts)
 
-    // Écouter les événements temps réel de gestion d'amis
-    const handleNewRequest = (newContact) => {
-        setContacts((prev) => [...prev, newContact]);
-    };
+    // 3. Écouteurs Socket pour la gestion des amis (temps réel)
+    useEffect(() => {
+        const handleNewRequest = (newContact) => {
+            setContacts((prev) => [...prev, newContact]);
+        };
 
-    const handleAccepted = (data) => {
-         // Met à jour localement le statut du contact
-         setContacts((prev) => 
-             prev.map(c => c._id === data.contactId 
-                ? { ...c, status: 'accepted' } 
-                : c
-            )
-         );
-    };
+        const handleAccepted = async () => {
+            const updatedContacts = await getContacts();
+            setContacts(updatedContacts);
+        };
 
-    socket.on('contact:request', handleNewRequest);
-    socket.on('contact:accepted', handleAccepted);
+        socket.on('contact:request', handleNewRequest);
+        socket.on('contact:accepted', handleAccepted);
 
-    return() => {
-        // Nettoyage lors du démontage du composant
-        socket.off('contact:request', handleNewRequest);
-        socket.off('contact:accepted', handleAccepted);
-    };
-}, []);
+        return() => {
+            socket.off('contact:request', handleNewRequest);
+            socket.off('contact:accepted', handleAccepted);
+        };
+    }, []);
 
     return (
         <div className="chat-page-layout">
